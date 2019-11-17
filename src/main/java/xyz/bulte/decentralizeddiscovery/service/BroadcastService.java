@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.jooq.lambda.Unchecked;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 import xyz.bulte.decentralizeddiscovery.DecentralizedServiceInstance;
 import xyz.bulte.decentralizeddiscovery.LocalInstance;
 import xyz.bulte.decentralizeddiscovery.dto.DiscoveryRequest;
@@ -13,6 +14,7 @@ import xyz.bulte.decentralizeddiscovery.mapper.DiscoveryRequestMapper;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import javax.validation.Valid;
 import java.io.IOException;
 import java.net.*;
 import java.util.*;
@@ -24,6 +26,7 @@ import static java.util.function.Predicate.not;
 
 @Slf4j
 @Service
+@Validated
 @RequiredArgsConstructor
 public class BroadcastService {
 
@@ -108,7 +111,7 @@ public class BroadcastService {
     }
 
 
-    private void handleIncomingMessage(DatagramPacket packet, DiscoveryRequest discoveryRequest) {
+    private void handleIncomingMessage(DatagramPacket packet, @Valid DiscoveryRequest discoveryRequest) {
         LocalInstance localInstance = localInstanceService.getLocalInstance();
         if (localInstance.getInstanceId().equals(discoveryRequest.getInstanceId())) {
             // don't wanna register ourselves

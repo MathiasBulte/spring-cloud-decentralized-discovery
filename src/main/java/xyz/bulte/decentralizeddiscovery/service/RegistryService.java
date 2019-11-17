@@ -5,7 +5,6 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -58,6 +57,7 @@ public class RegistryService {
                 localInstance.getPortNumber()
         );
 
+        log.info("Registering with instance {} with request {}", serviceInstance, discoveryRequest);
         restTemplate.postForEntity(serviceInstance.getUri() + "/discovery/register", discoveryRequest, Void.class);
     }
 }

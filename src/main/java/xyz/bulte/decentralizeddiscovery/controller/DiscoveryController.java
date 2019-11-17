@@ -1,7 +1,6 @@
 package xyz.bulte.decentralizeddiscovery.controller;
 
 import lombok.AllArgsConstructor;
-import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,6 +11,7 @@ import xyz.bulte.decentralizeddiscovery.dto.DiscoveryRequest;
 import xyz.bulte.decentralizeddiscovery.service.RegistryService;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("discovery")
@@ -22,7 +22,7 @@ public class DiscoveryController {
 
     @PostMapping("register")
     @ResponseStatus(HttpStatus.CREATED)
-    public void register(DiscoveryRequest discoveryRequest, HttpServletRequest servletRequest) {
+    public void register(@Valid DiscoveryRequest discoveryRequest, HttpServletRequest servletRequest) {
         DecentralizedServiceInstance decentralizedServiceInstance = new DecentralizedServiceInstance(
                 discoveryRequest.getInstanceId(),
                 discoveryRequest.getServiceId(),
