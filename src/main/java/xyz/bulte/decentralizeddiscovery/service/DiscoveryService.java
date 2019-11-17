@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import xyz.bulte.decentralizeddiscovery.RefreshableDiscoveryClientServiceInstanceListSupplier;
 import xyz.bulte.decentralizeddiscovery.event.NewServiceRegisteredEvent;
 
 import javax.annotation.PostConstruct;
@@ -16,6 +17,7 @@ public class DiscoveryService {
 
     private final BroadcastService broadcastService;
     private final RegistryService registryService;
+    private final RefreshableDiscoveryClientServiceInstanceListSupplier refreshableDiscoveryClientServiceInstanceListSupplier;
 
     @PostConstruct
     public void init() {
@@ -35,5 +37,6 @@ public class DiscoveryService {
     @EventListener
     public void privateAnnouncement(NewServiceRegisteredEvent event) {
         registryService.registerWith(event.getServiceInstance());
+        refreshableDiscoveryClientServiceInstanceListSupplier.refresh();
     }
 }

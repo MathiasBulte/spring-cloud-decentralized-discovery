@@ -22,8 +22,9 @@ import java.util.Collections;
 @RequiredArgsConstructor
 public class RegistryService {
     private final ApplicationEventPublisher eventPublisher;
-    private final RestTemplate restTemplate;
     private final LocalInstanceService localInstanceService;
+
+    private RestTemplate restTemplate = new RestTemplate();
 
     private Multimap<String, DecentralizedServiceInstance> serviceInstances = Multimaps.synchronizedSetMultimap(HashMultimap.create());
 
