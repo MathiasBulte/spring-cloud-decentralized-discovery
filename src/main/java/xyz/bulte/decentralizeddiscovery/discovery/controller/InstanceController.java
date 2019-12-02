@@ -1,11 +1,11 @@
-package xyz.bulte.decentralizeddiscovery.controller;
+package xyz.bulte.decentralizeddiscovery.discovery.controller;
 
 import lombok.AllArgsConstructor;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import xyz.bulte.decentralizeddiscovery.service.RegistryService;
+import xyz.bulte.decentralizeddiscovery.discovery.service.RegistryService;
 
 import java.util.Collection;
 

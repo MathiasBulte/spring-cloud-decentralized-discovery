@@ -1,8 +1,8 @@
-package xyz.bulte.decentralizeddiscovery.mapper;
+package xyz.bulte.decentralizeddiscovery.discovery.mapper;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Component;
-import xyz.bulte.decentralizeddiscovery.dto.DiscoveryRequest;
+import xyz.bulte.decentralizeddiscovery.discovery.dto.DiscoveryRequest;
 
 import java.io.IOException;
 import java.io.StringWriter;

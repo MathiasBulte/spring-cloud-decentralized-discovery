@@ -1,4 +1,4 @@
-package xyz.bulte.decentralizeddiscovery;
+package xyz.bulte.decentralizeddiscovery.discovery;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

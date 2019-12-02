@@ -1,4 +1,4 @@
-package xyz.bulte.decentralizeddiscovery.service;
+package xyz.bulte.decentralizeddiscovery.discovery.service;
 
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
@@ -6,7 +6,7 @@ import org.springframework.boot.web.servlet.context.ServletWebServerInitializedE
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
-import xyz.bulte.decentralizeddiscovery.LocalInstance;
+import xyz.bulte.decentralizeddiscovery.discovery.LocalInstance;
 
 import java.util.UUID;
 

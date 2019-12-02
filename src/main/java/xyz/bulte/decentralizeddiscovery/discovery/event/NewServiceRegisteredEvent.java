@@ -1,4 +1,4 @@
-package xyz.bulte.decentralizeddiscovery.event;
+package xyz.bulte.decentralizeddiscovery.discovery.event;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

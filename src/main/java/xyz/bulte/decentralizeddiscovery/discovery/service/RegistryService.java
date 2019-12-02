@@ -1,4 +1,4 @@
-package xyz.bulte.decentralizeddiscovery.service;
+package xyz.bulte.decentralizeddiscovery.discovery.service;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
@@ -9,10 +9,10 @@ import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import xyz.bulte.decentralizeddiscovery.DecentralizedServiceInstance;
-import xyz.bulte.decentralizeddiscovery.LocalInstance;
-import xyz.bulte.decentralizeddiscovery.dto.DiscoveryRequest;
-import xyz.bulte.decentralizeddiscovery.event.NewServiceRegisteredEvent;
+import xyz.bulte.decentralizeddiscovery.discovery.DecentralizedServiceInstance;
+import xyz.bulte.decentralizeddiscovery.discovery.LocalInstance;
+import xyz.bulte.decentralizeddiscovery.discovery.dto.DiscoveryRequest;
+import xyz.bulte.decentralizeddiscovery.discovery.event.NewServiceRegisteredEvent;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -47,6 +47,10 @@ public class RegistryService {
 
             eventPublisher.publishEvent(NewServiceRegisteredEvent.of(this, serviceInstance));
         }
+    }
+
+    public void deregister(ServiceInstance serviceInstance) {
+        serviceInstances.remove(serviceInstance.getServiceId(), serviceInstance);
     }
 
     public void registerWith(ServiceInstance serviceInstance) {

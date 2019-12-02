@@ -1,4 +1,4 @@
-package xyz.bulte.decentralizeddiscovery.dto;
+package xyz.bulte.decentralizeddiscovery.discovery.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -1,4 +1,4 @@
-package xyz.bulte.decentralizeddiscovery.client;
+package xyz.bulte.decentralizeddiscovery.discovery.client;
 
 import com.google.common.collect.Lists;
 import lombok.AllArgsConstructor;
@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.stereotype.Component;
-import xyz.bulte.decentralizeddiscovery.service.RegistryService;
+import xyz.bulte.decentralizeddiscovery.discovery.service.RegistryService;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
@@ -28,6 +28,10 @@ public class DecentralizedDiscoveryClient implements DiscoveryClient {
     @Override
     public List<ServiceInstance> getInstances(String serviceId) {
         return Lists.newArrayList(registryService.getServiceInstances(serviceId));
+    }
+
+    public List<ServiceInstance> getInstances() {
+        return Lists.newArrayList(registryService.getServiceInstances());
     }
 
     @Override

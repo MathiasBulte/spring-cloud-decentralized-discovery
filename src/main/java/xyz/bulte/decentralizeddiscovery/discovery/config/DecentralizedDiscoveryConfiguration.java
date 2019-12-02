@@ -1,4 +1,4 @@
-package xyz.bulte.decentralizeddiscovery.config;
+package xyz.bulte.decentralizeddiscovery.discovery.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
@@ -14,8 +14,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.client.RestTemplate;
-import xyz.bulte.decentralizeddiscovery.RefreshableDiscoveryClientServiceInstanceListSupplier;
-import xyz.bulte.decentralizeddiscovery.client.DecentralizedDiscoveryClient;
+import xyz.bulte.decentralizeddiscovery.discovery.RefreshableDiscoveryClientServiceInstanceListSupplier;
+import xyz.bulte.decentralizeddiscovery.discovery.client.DecentralizedDiscoveryClient;
 
 @Configuration
 @EnableConfigurationProperties
@@ -24,7 +24,7 @@ import xyz.bulte.decentralizeddiscovery.client.DecentralizedDiscoveryClient;
         matchIfMissing = true
 )
 @ConditionalOnDiscoveryEnabled
-@ComponentScan("xyz.bulte.decentralizeddiscovery")
+@ComponentScan("xyz.bulte.decentralizeddiscovery.discovery")
 @EnableScheduling
 @EnableAsync
 public class DecentralizedDiscoveryConfiguration {

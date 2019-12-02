@@ -1,4 +1,4 @@
-package xyz.bulte.decentralizeddiscovery.service;
+package xyz.bulte.decentralizeddiscovery.discovery.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -7,10 +7,10 @@ import org.jooq.lambda.Unchecked;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
-import xyz.bulte.decentralizeddiscovery.DecentralizedServiceInstance;
-import xyz.bulte.decentralizeddiscovery.LocalInstance;
-import xyz.bulte.decentralizeddiscovery.dto.DiscoveryRequest;
-import xyz.bulte.decentralizeddiscovery.mapper.DiscoveryRequestMapper;
+import xyz.bulte.decentralizeddiscovery.discovery.DecentralizedServiceInstance;
+import xyz.bulte.decentralizeddiscovery.discovery.LocalInstance;
+import xyz.bulte.decentralizeddiscovery.discovery.dto.DiscoveryRequest;
+import xyz.bulte.decentralizeddiscovery.discovery.mapper.DiscoveryRequestMapper;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;

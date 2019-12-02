@@ -1,11 +1,11 @@
-package xyz.bulte.decentralizeddiscovery.controller;
+package xyz.bulte.decentralizeddiscovery.discovery.controller;
 
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import xyz.bulte.decentralizeddiscovery.DecentralizedServiceInstance;
-import xyz.bulte.decentralizeddiscovery.dto.DiscoveryRequest;
-import xyz.bulte.decentralizeddiscovery.service.RegistryService;
+import xyz.bulte.decentralizeddiscovery.discovery.DecentralizedServiceInstance;
+import xyz.bulte.decentralizeddiscovery.discovery.dto.DiscoveryRequest;
+import xyz.bulte.decentralizeddiscovery.discovery.service.RegistryService;
 
 import javax.servlet.http.HttpServletRequest;
 
