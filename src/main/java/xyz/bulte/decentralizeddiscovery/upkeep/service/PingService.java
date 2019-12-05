@@ -25,13 +25,14 @@ public class PingService {
 
     private DecentralizedDiscoveryClient discoveryClient;
     private ApplicationEventPublisher eventPublisher;
+    private RestTemplate restTemplate;
 
     @Scheduled(fixedDelay = 5000)
     public void pingAllInstances() {
         List<ServiceInstance> instances = discoveryClient.getInstances();
 
         Predicate<Tuple2<ServiceInstance, Optional<ResponseEntity>>> noResponseReceived = response -> response.v2.isEmpty();
-        Predicate<Tuple2<ServiceInstance, Optional<ResponseEntity>>> notStatus200 = response -> response.v2.get().getStatusCode().is2xxSuccessful();
+        Predicate<Tuple2<ServiceInstance, Optional<ResponseEntity>>> notStatus200 = Predicate.not(response -> response.v2.get().getStatusCode().is2xxSuccessful());
 
         instances.parallelStream()
                 .map(this::pingInstance)
@@ -46,7 +47,6 @@ public class PingService {
 
     private Tuple2<ServiceInstance, Optional<ResponseEntity>> pingInstance(ServiceInstance serviceInstance) {
         log.debug("Pinging instance {} of service {}", serviceInstance.getInstanceId(), serviceInstance.getServiceId());
-        var restTemplate = new RestTemplate();
 
         try {
             ResponseEntity<String> response = restTemplate.getForEntity(serviceInstance.getUri() + "/ping", String.class);
