@@ -31,7 +31,7 @@ public class PingService {
         List<ServiceInstance> instances = discoveryClient.getInstances();
 
         Predicate<Tuple2<ServiceInstance, Optional<ResponseEntity>>> noResponseReceived = response -> response.v2.isEmpty();
-        Predicate<Tuple2<ServiceInstance, Optional<ResponseEntity>>> notStatus200 = response -> !response.v2.get().getStatusCode().is2xxSuccessful();
+        Predicate<Tuple2<ServiceInstance, Optional<ResponseEntity>>> notStatus200 = response -> response.v2.get().getStatusCode().is2xxSuccessful();
 
         instances.parallelStream()
                 .map(this::pingInstance)

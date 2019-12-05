@@ -15,7 +15,7 @@ import xyz.bulte.decentralizeddiscovery.discovery.config.DecentralizedDiscoveryC
 @Configuration
 @EnableConfigurationProperties
 @Import({DecentralizedDiscoveryConfiguration.class})
-@ConditionalOnProperty(value = "eureka.client.enabled", matchIfMissing = true)
+@ConditionalOnProperty(value = "discovery.enabled", matchIfMissing = true)
 @ConditionalOnDiscoveryEnabled
 @AutoConfigureBefore({ NoopDiscoveryClientAutoConfiguration.class,
         CommonsClientAutoConfiguration.class, ServiceRegistryAutoConfiguration.class })

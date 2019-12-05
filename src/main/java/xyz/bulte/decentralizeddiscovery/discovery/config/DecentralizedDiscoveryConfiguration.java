@@ -20,7 +20,7 @@ import xyz.bulte.decentralizeddiscovery.discovery.client.DecentralizedDiscoveryC
 @Configuration
 @EnableConfigurationProperties
 @ConditionalOnProperty(
-        value = {"eureka.client.enabled"},
+        value = {"discovery.enabled"},
         matchIfMissing = true
 )
 @ConditionalOnDiscoveryEnabled
@@ -31,6 +31,7 @@ public class DecentralizedDiscoveryConfiguration {
 
     @Bean
     @LoadBalanced
+    @ConditionalOnMissingBean
     public RestTemplate restTemplate() {
         return new RestTemplate();
     }
