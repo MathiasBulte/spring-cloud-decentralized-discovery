@@ -90,4 +90,12 @@
             <artifactId>spring-cloud-loadbalancer</artifactId>
         </dependency>
     </dependencies>
+
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub Mathias Bulté Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/MathiasBulte/spring-cloud-decentralized-discovery</url>
+        </repository>
+    </distributionManagement>
 </project>
