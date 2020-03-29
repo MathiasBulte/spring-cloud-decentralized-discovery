@@ -62,6 +62,7 @@ public class PingService {
                 .uri(serviceInstance.getUri() + "/ping")
                 .exchange()
                 .flatMap(clientResponse -> clientResponse.toEntity(String.class))
-                .map(response -> ServiceInstanceResponseEntity.of(serviceInstance, response));
+                .map(response -> ServiceInstanceResponseEntity.of(serviceInstance, response))
+                .onErrorReturn(ServiceInstanceResponseEntity.emptyResponse(serviceInstance));
     }
 }
