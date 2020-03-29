@@ -17,7 +17,7 @@ public class InstanceController {
 
     @GetMapping
     public Flux<ServiceInstance> getInstances() {
-        return Flux.fromStream(registryService.getServiceInstances().stream());
+        return Flux.fromIterable(registryService.getServiceInstances());
     }
 
 }
