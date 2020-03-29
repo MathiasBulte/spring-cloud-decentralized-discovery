@@ -5,10 +5,12 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.ClientResponse;
+import org.springframework.web.reactive.function.client.WebClient;
 import xyz.bulte.decentralizeddiscovery.discovery.DecentralizedServiceInstance;
 import xyz.bulte.decentralizeddiscovery.discovery.LocalInstance;
 import xyz.bulte.decentralizeddiscovery.discovery.dto.DiscoveryRequest;
@@ -23,7 +25,9 @@ import java.util.Collections;
 public class RegistryService {
     private final ApplicationEventPublisher eventPublisher;
     private final LocalInstanceService localInstanceService;
-    private final RestTemplate restTemplate;
+
+    @Qualifier("nonLoadBalanced")
+    private final WebClient webClient;
 
     private Multimap<String, DecentralizedServiceInstance> serviceInstances = Multimaps.synchronizedSetMultimap(HashMultimap.create());
 
@@ -36,14 +40,11 @@ public class RegistryService {
     }
 
     public void register(DecentralizedServiceInstance serviceInstance) {
-        log.debug("Registering serviceInstance {}", serviceInstance);
+        log.trace("Registering serviceInstance {}", serviceInstance);
 
-        // the underlying implementation of the map already
-        // enforces this, but I want to trigger something when
-        // a new service is registered
-        if (!serviceInstances.containsEntry(serviceInstance.getServiceId(), serviceInstance)) {
-            serviceInstances.put(serviceInstance.getServiceId(), serviceInstance);
-
+        boolean entryWasAdded = serviceInstances.put(serviceInstance.getServiceId(), serviceInstance);
+        if (entryWasAdded) {
+            log.debug("Registered serviceInstance {}", serviceInstance);
             eventPublisher.publishEvent(NewServiceRegisteredEvent.of(this, serviceInstance));
         }
     }
@@ -61,7 +62,13 @@ public class RegistryService {
                 localInstance.getPortNumber()
         );
 
-        log.info("Registering with instance {} with request {}", serviceInstance, discoveryRequest);
-        restTemplate.postForEntity(serviceInstance.getUri() + "/discovery/register", discoveryRequest, Void.class);
+        log.debug("Registering with instance {} with request {}", serviceInstance, discoveryRequest);
+
+        webClient.post()
+                .uri(serviceInstance.getUri() + "/discovery/register")
+                .bodyValue(discoveryRequest)
+                .exchange()
+                .flatMap(ClientResponse::toBodilessEntity)
+                .subscribe(voidResponseEntity -> log.trace("Registered, response: {}", voidResponseEntity));
     }
 }

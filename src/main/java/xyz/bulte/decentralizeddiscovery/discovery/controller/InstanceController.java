@@ -5,9 +5,8 @@ import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Flux;
 import xyz.bulte.decentralizeddiscovery.discovery.service.RegistryService;
-
-import java.util.Collection;
 
 @RestController
 @RequestMapping("instances")
@@ -17,8 +16,8 @@ public class InstanceController {
     private RegistryService registryService;
 
     @GetMapping
-    public Collection<ServiceInstance> getInstances() {
-        return registryService.getServiceInstances();
+    public Flux<ServiceInstance> getInstances() {
+        return Flux.fromStream(registryService.getServiceInstances().stream());
     }
 
 }

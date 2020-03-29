@@ -2,14 +2,13 @@ package xyz.bulte.decentralizeddiscovery.discovery.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import xyz.bulte.decentralizeddiscovery.discovery.RefreshableDiscoveryClientServiceInstanceListSupplier;
 import xyz.bulte.decentralizeddiscovery.discovery.event.DeregisterServiceEvent;
 import xyz.bulte.decentralizeddiscovery.discovery.event.NewServiceRegisteredEvent;
-
-import javax.annotation.PostConstruct;
 
 @Slf4j
 @Service
@@ -19,11 +18,6 @@ public class DiscoveryService {
     private final BroadcastService broadcastService;
     private final RegistryService registryService;
     private final RefreshableDiscoveryClientServiceInstanceListSupplier refreshableDiscoveryClientServiceInstanceListSupplier;
-
-    @PostConstruct
-    public void init() {
-        broadcastService.listenForBroadcasts();
-    }
 
     /**
      * Scheduling only starts after a prolonged time.
@@ -46,4 +40,11 @@ public class DiscoveryService {
         log.debug("Handling DeregisterServiceEvent {}", event);
         registryService.deregister(event.getServiceInstance());
     }
+
+    @EventListener
+    public void listenForApplicationReadyEvent(ApplicationReadyEvent event) {
+        publicAnnouncement();
+        broadcastService.listenForBroadcasts();
+    }
+
 }

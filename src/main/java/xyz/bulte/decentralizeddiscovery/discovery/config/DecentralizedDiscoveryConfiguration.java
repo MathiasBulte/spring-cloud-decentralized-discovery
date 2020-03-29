@@ -1,5 +1,6 @@
 package xyz.bulte.decentralizeddiscovery.discovery.config;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -14,6 +15,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
 import xyz.bulte.decentralizeddiscovery.discovery.RefreshableDiscoveryClientServiceInstanceListSupplier;
 import xyz.bulte.decentralizeddiscovery.discovery.client.DecentralizedDiscoveryClient;
 
@@ -34,6 +36,19 @@ public class DecentralizedDiscoveryConfiguration {
     @ConditionalOnMissingBean
     public RestTemplate restTemplate() {
         return new RestTemplate();
+    }
+
+    @Bean
+    @LoadBalanced
+    @ConditionalOnMissingBean
+    public WebClient webClient() {
+        return WebClient.create();
+    }
+
+    @Bean
+    @Qualifier("nonLoadBalanced")
+    public WebClient nonLoadBalancedWebClient() {
+        return WebClient.create();
     }
 
     @Bean

@@ -2,20 +2,19 @@ package xyz.bulte.decentralizeddiscovery.upkeep.service;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.jooq.lambda.tuple.Tuple;
-import org.jooq.lambda.tuple.Tuple2;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import xyz.bulte.decentralizeddiscovery.discovery.client.DecentralizedDiscoveryClient;
+import xyz.bulte.decentralizeddiscovery.discovery.dto.ServiceInstanceResponseEntity;
 import xyz.bulte.decentralizeddiscovery.discovery.event.DeregisterServiceEvent;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Predicate;
 
 @Slf4j
@@ -25,34 +24,44 @@ public class PingService {
 
     private DecentralizedDiscoveryClient discoveryClient;
     private ApplicationEventPublisher eventPublisher;
-    private RestTemplate restTemplate;
+
+    @Qualifier("nonLoadBalanced")
+    private WebClient webClient;
 
     @Scheduled(fixedDelay = 5000)
     public void pingAllInstances() {
         List<ServiceInstance> instances = discoveryClient.getInstances();
 
-        Predicate<Tuple2<ServiceInstance, Optional<ResponseEntity>>> noResponseReceived = response -> response.v2.isEmpty();
-        Predicate<Tuple2<ServiceInstance, Optional<ResponseEntity>>> notStatus200 = Predicate.not(response -> response.v2.get().getStatusCode().is2xxSuccessful());
+        log.debug("Pinging all instances {}", instances);
 
-        instances.parallelStream()
-                .map(this::pingInstance)
-                .filter(noResponseReceived.or(notStatus200))
-                .map(Tuple2::v1)
-                .forEach(this::deregister);
+        Flux.fromIterable(instances)
+                .parallel()
+                .flatMap(this::pingInstance)
+                .filter(noResponseReceived().or(notStatus200()))
+                .map(ServiceInstanceResponseEntity::getServiceInstance)
+                .subscribe(this::deregister);
+    }
+
+    private Predicate<ServiceInstanceResponseEntity> noResponseReceived() {
+        return response -> response.getResponseEntity().isEmpty();
+    }
+
+    private Predicate<ServiceInstanceResponseEntity> notStatus200() {
+        return Predicate.not((ServiceInstanceResponseEntity response) ->
+                response.getResponseEntity().get().getStatusCode().is2xxSuccessful());
     }
 
     private void deregister(ServiceInstance serviceInstance) {
         eventPublisher.publishEvent(DeregisterServiceEvent.of(this, serviceInstance));
     }
 
-    private Tuple2<ServiceInstance, Optional<ResponseEntity>> pingInstance(ServiceInstance serviceInstance) {
-        log.debug("Pinging instance {} of service {}", serviceInstance.getInstanceId(), serviceInstance.getServiceId());
+    private Mono<ServiceInstanceResponseEntity> pingInstance(ServiceInstance serviceInstance) {
+        log.trace("Pinging instance {} of service {}", serviceInstance.getInstanceId(), serviceInstance.getServiceId());
 
-        try {
-            ResponseEntity<String> response = restTemplate.getForEntity(serviceInstance.getUri() + "/ping", String.class);
-            return Tuple.tuple(serviceInstance, Optional.of(response));
-        } catch (RestClientException e) {
-            return Tuple.tuple(serviceInstance, Optional.empty());
-        }
+        return webClient.get()
+                .uri(serviceInstance.getUri() + "/ping")
+                .exchange()
+                .flatMap(clientResponse -> clientResponse.toEntity(String.class))
+                .map(response -> ServiceInstanceResponseEntity.of(serviceInstance, response));
     }
 }
