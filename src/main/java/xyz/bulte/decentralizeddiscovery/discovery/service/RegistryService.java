@@ -69,6 +69,7 @@ public class RegistryService {
                 .bodyValue(discoveryRequest)
                 .exchange()
                 .flatMap(ClientResponse::toBodilessEntity)
+                .doOnError(throwable -> log.error("Couldn't register with instance {}", serviceInstance, throwable))
                 .subscribe(voidResponseEntity -> log.trace("Registered, response: {}", voidResponseEntity));
     }
 }

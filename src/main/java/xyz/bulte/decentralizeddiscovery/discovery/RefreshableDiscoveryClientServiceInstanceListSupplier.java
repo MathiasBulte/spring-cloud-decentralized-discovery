@@ -23,9 +23,9 @@ public class RefreshableDiscoveryClientServiceInstanceListSupplier implements Se
     }
 
     private void populateServiceInstances() {
-        this.serviceInstances = Flux.defer(() -> {
-            return Flux.fromIterable(discoveryClient.getInstances(this.serviceId));
-        }).subscribeOn(Schedulers.boundedElastic());
+        this.serviceInstances = Flux.defer(() -> Flux
+                .fromIterable(discoveryClient.getInstances(this.serviceId)))
+                .subscribeOn(Schedulers.boundedElastic());
     }
 
     public String getServiceId() {
