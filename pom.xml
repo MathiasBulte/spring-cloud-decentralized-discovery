@@ -13,7 +13,6 @@
         <java.version>11</java.version>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
-        <spring-webflux.version>5.2.4.RELEASE</spring-webflux.version>
         <jool.version>0.9.14</jool.version>
         <guava.version>28.1-jre</guava.version>
     </properties>
