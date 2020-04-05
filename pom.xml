@@ -95,4 +95,17 @@
             <url>https://maven.pkg.github.com/MathiasBulte/spring-cloud-decentralized-discovery</url>
         </repository>
     </distributionManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.amashchenko.maven.plugin</groupId>
+                <artifactId>gitflow-maven-plugin</artifactId>
+                <version>1.13.0</version>
+                <configuration>
+                    <!-- optional configuration -->
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
